@@ -29,19 +29,22 @@ def wrangle_training_data():
              'target_nitrogen_oxides': 'nitrogen_oxides'}
     df = df.rename(columns=col_names)
     
-    # Correct the datatype of the datetime column
+    # Convert the values of the datetime column to the datetime64 dtype
     df.datetime = pd.to_datetime(df.datetime)
 
-    # Split the datetime column to separate date and time
-    df = df.assign(date = [dt.date() for dt in df.datetime], 
-                time = [dt.time() for dt in df.datetime])
-
-    # Split the date into day, month, and year
-    df = df.assign(day=[d.day for d in df.date], 
-                month = [d.month for d in df.date],
-                year = [d.year for d in df.date])
+    # Split the values of the datetime column to date, time, day, month, year and weekday
+    df = df.assign(
+        date = [dt.date() for dt in df.datetime],
+        time = [dt.time() for dt in df.datetime],
+        day = [dt.day for dt in df.datetime],
+        month = [dt.month for dt in df.datetime],
+        year = [dt.year for dt in df.datetime],
+        weekday = [dt.weekday() for dt in df.datetime]
+    )
 
     # Set the datetime column as the index
     df = df.set_index('datetime')
 
     return df
+
+    
